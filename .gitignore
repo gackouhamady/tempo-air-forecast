@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+data/raw/*
+data/interim/*
+data/processed/*
+models/*
+!models/.gitkeep
+notebooks/.ipynb_checkpoints/
+dist/
+.build/
