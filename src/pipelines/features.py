@@ -1,7 +1,8 @@
 # src/pipelines/features.py
 from __future__ import annotations
+
 import glob
-from typing import Optional, List
+
 import pandas as pd
 
 # Import config safely (works with or without FEATURES_PATH in config)
@@ -12,16 +13,19 @@ PROCESSED_DIR = cfg.PROCESSED_DIR
 # default output path if FEATURES_PATH not present in config
 FEATURES_PATH = getattr(cfg, "FEATURES_PATH", str(PROCESSED_DIR / "features.parquet"))
 
+
 # ---------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------
-def latest(path_pattern: str) -> Optional[str]:
+def latest(path_pattern: str) -> str | None:
     """Return the latest file path matching the pattern (or None)."""
     files = sorted(glob.glob(path_pattern))
     return files[-1] if files else None
 
+
 def _safe_to_datetime(series, utc: bool = True):
     return pd.to_datetime(series, utc=utc, errors="coerce")
+
 
 def _resample_hourly_mean(df: pd.DataFrame, ts_col: str, tz_aware: bool = True) -> pd.DataFrame:
     """Set index to ts_col and resample hourly mean."""
@@ -32,14 +36,15 @@ def _resample_hourly_mean(df: pd.DataFrame, ts_col: str, tz_aware: bool = True) 
     out = out.resample("1h").mean()
     return out
 
+
 # ---------------------------------------------------------------------
 # Features builder
 # ---------------------------------------------------------------------
 def build_features(
-    target_priority: List[str] = ("no2", "pm25"),
+    target_priority: list[str] = ("no2", "pm25"),
     horizon_hours: int = 24,
     impute_limit: int = 3,
-) -> Optional[str]:
+) -> str | None:
     """
     Build the features dataset from:
       - Air quality unified: data/raw/air_quality_*.parquet
@@ -116,7 +121,7 @@ def build_features(
         df[f"{col}_roll6_std"] = df[col].rolling(6).std()
 
     # 7) Target t + horizon_hours; we write explicit name y_next_24h for compatibility
-    target: Optional[str] = None
+    target: str | None = None
     for cand in target_priority:
         if cand in df.columns:
             target = cand

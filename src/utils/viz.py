@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
 
+
 def line_chart(ts_df, y_cols, title="Time Series"):
     fig = go.Figure()
     for c in y_cols:

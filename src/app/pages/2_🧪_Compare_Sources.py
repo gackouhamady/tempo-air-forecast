@@ -1,12 +1,15 @@
-import pandas as pd
-import streamlit as st
 from glob import glob
 
+import pandas as pd
+import streamlit as st
+
 st.title("🧪 Compare Sources (Raw)")
+
 
 def latest(pattern):
     files = sorted(glob(pattern))
     return files[-1] if files else None
+
 
 aq = latest("data/raw/openaq_*.parquet")
 meteo = latest("data/raw/openmeteo_*.parquet")

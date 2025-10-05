@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class ForecastRequest(BaseModel):
     lat: float
     lon: float

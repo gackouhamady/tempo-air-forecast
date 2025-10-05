@@ -1,17 +1,20 @@
 # src/config.py
 from __future__ import annotations
+
 import os
 from pathlib import Path
-from typing import Optional
+
 from dotenv import load_dotenv
 
 # Charge .env si présent
 load_dotenv()
 
+
 # ---------- Helpers ----------
 def _get_env_str(name: str, default: str) -> str:
     val = os.getenv(name, "").strip()
     return val if val else default
+
 
 def _get_env_int(name: str, default: int) -> int:
     try:
@@ -19,15 +22,18 @@ def _get_env_int(name: str, default: int) -> int:
     except ValueError:
         return default
 
+
 def _get_env_float(name: str, default: float) -> float:
     try:
         return float(_get_env_str(name, str(default)))
     except ValueError:
         return default
 
+
 def _get_env_bool(name: str, default: bool) -> bool:
     raw = _get_env_str(name, "true" if default else "false").lower()
     return raw in {"1", "true", "yes", "y", "on"}
+
 
 # ---------- API endpoints ----------
 OPENAQ_BASE_URL = _get_env_str("OPENAQ_BASE_URL", "https://api.openaq.org/v2")

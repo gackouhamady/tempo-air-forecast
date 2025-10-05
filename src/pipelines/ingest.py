@@ -1,11 +1,18 @@
 # src/pipelines/ingest.py
 from __future__ import annotations
-import requests
-import pandas as pd
+
 from datetime import datetime, timedelta, timezone
+
+import pandas as pd
+import requests
+
 from src.config import (
-    OPENAQ_BASE_URL, OPEN_METEO_BASE_URL, DEFAULT_LAT, DEFAULT_LON,
-    RAW_DIR, DATA_WINDOW_DAYS
+    DATA_WINDOW_DAYS,
+    DEFAULT_LAT,
+    DEFAULT_LON,
+    OPEN_METEO_BASE_URL,
+    OPENAQ_BASE_URL,
+    RAW_DIR,
 )
 from src.utils.io import save_parquet, today_stamp
 
@@ -71,10 +78,10 @@ def fetch_openaq(lat: float, lon: float, days: int = 7, radius_m: int = 15000) -
         # pivot to wide, then resample hourly
         pivot = (
             df.pivot_table(index="datetime", columns="parameter", values="value", aggfunc="mean")
-              .rename(columns={"pm2.5": "pm25"})
-              .sort_index()
-              .resample("1H")
-              .mean()
+            .rename(columns={"pm2.5": "pm25"})
+            .sort_index()
+            .resample("1H")
+            .mean()
         )
         return pivot
     except Exception as e:

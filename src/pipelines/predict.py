@@ -1,7 +1,10 @@
 from __future__ import annotations
-import pandas as pd
+
 import joblib
-from src.config import PROCESSED_DIR, MODELS_DIR
+import pandas as pd
+
+from src.config import MODELS_DIR, PROCESSED_DIR
+
 
 def batch_predict():
     df = pd.read_parquet(f"{PROCESSED_DIR}/features.parquet").select_dtypes(include=["number"])
@@ -12,8 +15,10 @@ def batch_predict():
     out["y_pred"] = preds
     print("Predict OK:", out.tail(5)[["y_pred"]])
 
+
 def main():
     batch_predict()
+
 
 if __name__ == "__main__":
     main()
